@@ -18,13 +18,13 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('booking_id');
             $table->decimal('amount', 8, 2);
-            $table->string('payment_method')->enum(['credit_card', 'paypal', 'cash']);
+            $table->enum('payment_method', ['credit_card', 'paypal', 'cash']);
             $table->decimal('fee', 8, 2)->default(0.00);
             $table->string('reference_number')->unique();  
-            $table->string('type')->enum(['payment', 'refund', 'adjustment']);
-            $table->string('method')->enum(['credit_card', 'paypal', 'cash']);
+            $table->enum('type', ['payment', 'refund', 'adjustment']);
+            $table->enum('method', ['credit_card', 'paypal', 'cash']);
             $table->decimal('net_amount', 8, 2)->default(0.00);
-            $table->string('status')->enum(['pending', 'completed', 'failed', 'refunded']);
+            $table->enum('status', ['pending', 'completed', 'failed', 'refunded']);
             $table->timestamp('processed_at')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();

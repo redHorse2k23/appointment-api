@@ -17,9 +17,9 @@ class CreateCourtsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('court_number')->unique();
-            $table->string('type')->enum(['indoor', 'outdoor']);
+            $table->enum('type', ['indoor', 'outdoor']);
             $table->decimal('hourly_rate', 8, 2);
-            $table->string('status')->enum(['available', 'maintenance', 'closed']);
+            $table->enum('status', ['available', 'maintenance', 'closed'])->default('available');
             $table->timestamps();
         });
     }

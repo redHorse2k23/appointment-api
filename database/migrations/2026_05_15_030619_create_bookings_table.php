@@ -22,8 +22,8 @@ class CreateBookingsTable extends Migration
             $table->time('end_time');
             $table->integer('duration_minutes');
             $table->decimal('amount', 8, 2);
-            $table->string('status')->enum(['pending', 'confirmed', 'cancelled']);
-            $table->string('payment_method')->enum(['credit_card', 'paypal', 'cash']);
+            $table->enum('status', ['pending', 'confirmed', 'cancelled']);
+            $table->enum('payment_method', ['credit_card', 'paypal', 'cash']);
             $table->string('transaction_id')->nullable();
             $table->string('attachment')->nullable();
             $table->string('reference_number')->nullable();
