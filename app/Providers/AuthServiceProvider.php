@@ -9,12 +9,16 @@ class AuthServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Gate::define('admin-only', function ($user) {
+        Gate::define('admin', function ($user) {
             return $user->role === 'admin';
         });
 
-        Gate::define('manager-only', function ($user) {
-            return in_array($user->role, ['manager', 'admin']);
+        Gate::define('owner', function ($user) {
+            return $user->role === 'owner';
+        });
+
+        Gate::define('user', function ($user) {
+            return $user->role === 'user';
         });
     }
 }

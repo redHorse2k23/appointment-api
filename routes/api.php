@@ -12,34 +12,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::middleware('role:admin')->group(function () {
-
-        Route::get('/admin-only', function () {
-            return response()->json([
-                'message' => 'Admin only route'
-            ]);
-        });
-
-    });
-
-    Route::middleware('role:manager,admin')->group(function () {
-
-        Route::get('/manager-only', function () {
-            return response()->json([
-                'message' => 'Manager or Admin route'
-            ]);
-        });
-
-    });
-
-    Route::middleware('role:user')->group(function () {
-
-        Route::get('/user-only', function () {
-            return response()->json([
-                'message' => 'User only route'
-            ]);
-        });
-
-    });
-
 });
