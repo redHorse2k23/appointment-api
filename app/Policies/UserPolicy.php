@@ -14,11 +14,14 @@ class UserPolicy
         return $user->is_admin;
     }
     
-
     public function canCreateCourt(User $user)
     {
         return $user->is_owner;
     }
 
+    public function canViewCourts(User $user)
+    {
+        return $user->is_owner;
+    }
 
 }

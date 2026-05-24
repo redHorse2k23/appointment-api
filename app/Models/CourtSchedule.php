@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CourtSchedules extends Model
+class CourtSchedule extends Model
 {
     use HasFactory;
 
@@ -19,7 +19,7 @@ class CourtSchedules extends Model
 
     public function court()
     {
-        return $this->belongsTo(Courts::class, 'court_id');
+        return $this->belongsTo(Court::class, 'court_id');
     }
 
 
