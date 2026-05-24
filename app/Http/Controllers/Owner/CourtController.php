@@ -4,18 +4,22 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Models\User;
-
-use App\Models\Courts;
+use App\Models\Court;
+use App\Cache\Owner\CourtCache;
 
 class CourtController extends Controller
 {
     public function allCourt(Request $request){
 
-        $courts = Courts::where('user_id', auth()->id())->paginate(10);
-        return response()->json($courts);
+        $this->authorize('canViewCourts', User::class);
 
+        $courts = CourtCache::getCourts(auth()->id());
+
+        $perPage = $request->query('per_page', 10);
+        $page = $request->query('page', 1);
+        $paginatedCourts = $courts->forPage($page, $perPage)->values();
+        return response()->json($paginatedCourts);
     }
 
     public function createCourt(Request $request){
@@ -41,9 +45,12 @@ class CourtController extends Controller
             'hourly_rate'=>$request->hourly_rate,
         ];
 
-        $create = Courts::create($court);
+        $create = Court::create($court);
         $create->save();
 
+        //clear cache after creating a new court
+        CourtCache::clearCourts(auth()->id());
+        
         return response()->json(['message' => 'Court created successfully', 'court' => $court], 201);
 
 

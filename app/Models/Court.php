@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Courts extends Model
+class Court extends Model
 {
     use HasFactory;
 
@@ -27,7 +27,7 @@ class Courts extends Model
     
     public function bookings()
     {
-        return $this->hasMany(Bookings::class, 'court_id');
+        return $this->hasMany(Booking::class, 'court_id');
     }
 
 }
