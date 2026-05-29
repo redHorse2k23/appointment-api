@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class CourtCache extends CacheProvider
 {
-    public function __construct($user_id,$ttl = 60)
+    public function __construct($user_id,$ttl = 1000)
     {
         $key = 'court_cache_user_' . $user_id;
 

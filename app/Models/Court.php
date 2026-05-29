@@ -17,8 +17,14 @@ class Court extends Model
         'type',
         'hourly_rate',
         'user_id',
+        'description',
+        'policy'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 
     public function user()
     {

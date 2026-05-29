@@ -29,20 +29,22 @@ class CourtController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
-            // 'description' => 'nullable|string',
+            'description' => 'nullable|string',
             'court_number' => 'required|integer|max:255',
             'type'=>'required|in:indoor,outdoor',
             'hourly_rate'=>'required|numeric',
+            'policy' => 'nullable|string'
         ]);
 
         $court = [
             'user_id'=> auth()->id(),
             'name' => $request->name,
             'location' => $request->location,
-            // 'description' => $request->description,
+            'description' => $request->description,
             'court_number'=>$request->court_number,
             'type'=>$request->type,
             'hourly_rate'=>$request->hourly_rate,
+            'policy'=>$request->policy
         ];
 
         $create = Court::create($court);
