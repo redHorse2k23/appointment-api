@@ -50,7 +50,7 @@ class CourtCache extends CacheProvider
         return $ins->getData();
     }
 
-    public function clearSchedule($courtId){
+    public static  function clearSchedule($courtId){
         $key = 'court_schedule_' . $courtId . '_' . auth()->id();
         $ins = new static($key);
         $ins->clearData();
