@@ -28,6 +28,34 @@ class CourtCache extends CacheProvider
         return $ins->getData();
     }
 
+    public function showCourt($courtId)
+    {
+        $key = "show_court_".$courtId;
+        $ins = new static($key);
+        if(!$ins->hasData()){
+            $court = Court::where('id',$courtId)->get();
+            $ins->setData($court);
+        }
+        return $ins->getData();
+    }
+
+    public static function getCourtSchedule($courtId)
+    {
+        $key = 'court_schedule_' . $courtId . '_' . auth()->id();
+        $ins = new static($key);    
+        if(!$ins->hasData()){
+            $courtSchedule = Court::find($courtId)->schedules()->get();
+            $ins->setData($courtSchedule);
+        }
+        return $ins->getData();
+    }
+
+    public function clearSchedule($courtId){
+        $key = 'court_schedule_' . $courtId . '_' . auth()->id();
+        $ins = new static($key);
+        $ins->clearData();
+    }
+
     public static function clearCourts($user_id)
     {
         $ins = new static($user_id);
