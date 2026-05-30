@@ -36,4 +36,9 @@ class Court extends Model
         return $this->hasMany(Booking::class, 'court_id');
     }
 
+    public function schedules()
+    {
+        return $this->hasMany(CourtSchedule::class, 'court_id');
+    }
+
 }

@@ -12,17 +12,22 @@ class CourtSchedule extends Model
 
     protected $fillable = [
         'court_id',
-        'date',
+        'day',
         'start_time',
         'end_time',
+        'status',
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
 
     public function court()
     {
         return $this->belongsTo(Court::class, 'court_id');
     }
-
-
 
 }
 
