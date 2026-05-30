@@ -28,7 +28,7 @@ class CourtCache extends CacheProvider
         return $ins->getData();
     }
 
-    public function showCourt($courtId)
+    public static function showCourt($courtId)
     {
         $key = "show_court_".$courtId;
         $ins = new static($key);
