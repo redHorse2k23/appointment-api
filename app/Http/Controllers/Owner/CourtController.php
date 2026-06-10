@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Court;
+use App\Models\CourtAttachment;
 use App\Cache\Owner\CourtCache;
 use App\Models\CourtSchedule;
 use Illuminate\Validation\Rule;
 use App\Services\Limiter;
+use Illuminate\Support\Facades\Storage;
 
 class CourtController extends Controller
 {
@@ -137,13 +139,97 @@ class CourtController extends Controller
     }
 
 
-    public function validateCourt($courtId){
+    public function uploadAttachment(Request $request, $courtId)
+    {
+        $this->authorize('canCreateCourt', User::class);
 
+        $court = $this->validateCourt($courtId);
+
+        if ($court instanceof \Illuminate\Http\JsonResponse) {
+            return $court;
+        }
+
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+        ]);
+
+        $attachmentCount = $court->attachments()->count();
+
+        if ($attachmentCount >= 5) {
+            return response()->json([
+                'message' => 'Maximum 5 images allowed per court.',
+            ], 422);
+        }
+
+        $file = $request->file('image');
+        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $filePath = $file->storeAs('court_attachments/' . $courtId, $fileName, 'public');
+
+        $attachment = CourtAttachment::create([
+            'court_id' => $courtId,
+            'file_path' => $filePath,
+            'file_name' => $file->getClientOriginalName(),
+            'mime_type' => $file->getClientMimeType(),
+            'file_size' => $file->getSize(),
+        ]);
+
+        $url = Storage::url($attachment->file_path);
+
+        return response()->json([
+            'message' => 'Image uploaded successfully',
+            'attachment' => $attachment,
+            'url' => $url,
+        ], 201);
+    }
+
+    public function deleteAttachment($courtId, $attachmentId)
+    {
+        $this->authorize('canCreateCourt', User::class);
+
+        $court = $this->validateCourt($courtId);
+
+        if ($court instanceof \Illuminate\Http\JsonResponse) {
+            return $court;
+        }
+
+        $attachment = CourtAttachment::find($attachmentId);
+
+        if (!$attachment || ((int) $attachment->court_id !== (int) $courtId)) {
+            return response()->json(['message' => 'Attachment not found'], 404);
+        }
+
+        Storage::disk('public')->delete($attachment->file_path);
+        $attachment->delete();
+
+        return response()->json([
+            'message' => 'Image deleted successfully',
+        ]);
+    }
+
+    public function getAttachments($courtId)
+    {
+        $court = $this->validateCourt($courtId);
+
+        if ($court instanceof \Illuminate\Http\JsonResponse) {
+            return $court;
+        }
+
+        $attachments = $court->attachments()->get();
+
+        return response()->json($attachments);
+    }
+
+    public function validateCourt($courtId)
+    {
         $court = Court::find($courtId);
 
-        if (!$court || $court->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Page Not Found'], 404);
-        }   
+        if (!$court) {
+            return response()->json(['message' => 'Court not found'], 404);
+        }
+
+        if ($court->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Forbidden: you do not own this court'], 403);
+        }
 
         return $court;
     }
