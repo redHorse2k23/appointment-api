@@ -41,4 +41,9 @@ class Court extends Model
         return $this->hasMany(CourtSchedule::class, 'court_id');
     }
 
+    public function attachments()
+    {
+        return $this->hasMany(CourtAttachment::class, 'court_id');
+    }
+
 }
