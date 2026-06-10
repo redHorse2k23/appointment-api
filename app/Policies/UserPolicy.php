@@ -24,4 +24,9 @@ class UserPolicy
         return $user->is_owner;
     }
 
+    public function update(User $user, User $targetUser)
+    {
+        return $user->id === $targetUser->id;
+    }
+
 }

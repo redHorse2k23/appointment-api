@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 
-Route::get('/user-only', function () {
-    return response()->json([
-        'message' => 'User only route'
-    ]);
-});
+Route::get('/bookings', 'BookingController@index');
+Route::get('/booking/{booking}', 'BookingController@show');
+Route::post('/booking', 'BookingController@store');
+Route::post('/booking/{booking}/cancel', 'BookingController@cancel');
+
+Route::post('/update/{id}', 'UserController@update');

@@ -17,14 +17,29 @@ class Booking extends Model
         'end_time',
         'duration_minutes',
         'amount',
+        'status',
         'payment_method',
+        'transaction_id',
         'attachment',
-        'reference_number'
+        'reference_number',
+        'notes',
+        'cancelled_by',
+        'cancelled_at',
     ];
+
+    public function getUserIdAttribute()
+    {
+        return $this->attributes['user_id_1'] ?? null;
+    }
+
+    public function setUserIdAttribute($value)
+    {
+        $this->attributes['user_id_1'] = $value;
+    }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id_1');
     }
 
     public function court()
